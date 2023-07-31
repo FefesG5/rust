@@ -27,6 +27,18 @@ fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
     mean_squared_diff.sqrt()
 }
 
+fn calculate_median(numbers: &[f64]) ->f64 {
+    let mut sorted_numbers = numbers.to_vec();
+    sorted_numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+    let mid = sorted_numbers.len() / 2;
+    if sorted_numbers.len() % 2 == 0 {
+        (sorted_numbers[mid - 1] + sorted_numbers[mid]) / 2.0
+    } else{
+        sorted_numbers[mid]
+    }
+}
+
 fn main() {
     println!("This program finds the sum, average, and standard deviation of a list of numbers!");
     println!("Enter a list of numbers separated by spaces: ");
@@ -41,10 +53,12 @@ fn main() {
     let sum = kahan_sum(&numbers);
     let mean = calculate_mean(&numbers);
     let standard_deviation = calculate_standard_deviation(&numbers, mean);
+    let median = calculate_median(&numbers);
 
 
     println!("Numbers: {:?}", numbers);
     println!("Sum: {:.2}", sum);
     println!("Average {:.2}", mean);
     println!("Standard Deviation {:.2}", standard_deviation);
+    println!("Median {:.2}", median);
 }
