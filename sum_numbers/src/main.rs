@@ -39,6 +39,28 @@ fn calculate_median(numbers: &[f64]) ->f64 {
     }
 }
 
+fn calculate_percentile(numbers: &[f64], percentile:f64) -> f64 {
+    let mut sorted_numbers = numbers.to_vec();
+    sorted_numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+    let n = sorted_numbers.len();
+    let index = ({percentile/100.0} * (n as f64 - 1.0)) as usize;
+    
+    if index >= n - 1 {
+        sorted_numbers[n - 1]
+    } else {
+        let lower_value = sorted_numbers[index];
+        let upper_value = sorted_numbers[index + 1];
+        lower_value + (percentile / 100.0) * (upper_value - lower_value)
+    }
+}
+
+fn calculate_interquartile_range(numbers: &[f64]) -> f64 {
+    let q3 = calculate_percentile(numbers, 75.0);
+    let q1 = calculate_percentile(numbers, 25.0);
+    q3 - q1
+}
+
 fn main() {
     println!("This program finds the sum, average, and standard deviation of a list of numbers!");
     println!("Enter a list of numbers separated by spaces: ");
@@ -55,10 +77,18 @@ fn main() {
     let standard_deviation = calculate_standard_deviation(&numbers, mean);
     let median = calculate_median(&numbers);
 
+    let interquartile_range = calculate_interquartile_range(&numbers);
+    let q1 = calculate_percentile(&numbers, 25.0);
+    let q3 = calculate_percentile(&numbers, 75.0);
+
 
     println!("Numbers: {:?}", numbers);
     println!("Sum: {:.2}", sum);
     println!("Average {:.2}", mean);
     println!("Standard Deviation {:.2}", standard_deviation);
     println!("Median {:.2}", median);
+    println!("25th Percentile (Q1) {:.2}", q1);
+    println!("75th Percentile (Q3) {:.2}", q3);
+    println!("Interquartile Range {:.2}", interquartile_range);
+
 }
