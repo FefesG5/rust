@@ -80,16 +80,21 @@ fn calculate_coefficient_of_variation(mean:f64, standard_deviation: f64) -> f64 
     (standard_deviation / mean ) * 100.0
 }
 
-fn calculate_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> f64 {
+fn calculate_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> Option<f64> {
     let n = numbers.len() as f64;
+    if n < 3.0 || standard_deviation == 0.0 {
+        return None;
+    }
+
     let mut sum_cubed_diff = 0.0;
     for &num in numbers {
         let diff = num - mean;
         sum_cubed_diff += diff * diff * diff;
     }
-    let skewness = (sum_cubed_diff / (n * standard_deviation * standard_deviation * standard_deviation)).sqrt();
-    skewness
+    let skewness = (sum_cubed_diff / (n * standard_deviation.powi(3))).sqrt();
+    Some(skewness)
 }
+
 
 fn main() {
     println!("This program finds the sum, average, and standard deviation of a list of numbers!");
@@ -101,6 +106,11 @@ fn main() {
         .split_whitespace()
         .filter_map(|s| s.parse::<f64>().ok())
         .collect();
+
+    if numbers.is_empty(){
+        println!("No valid numbers entered. Please enter a list of numbers.");
+        return
+    }
     
     let sum = kahan_sum(&numbers);
     let mean = calculate_mean(&numbers);
@@ -116,18 +126,21 @@ fn main() {
     let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
     let skewness = calculate_skewness(&numbers, mean, standard_deviation);
 
-
+   
     println!("Numbers: {:?}", numbers);
     println!("Sum: {:.2}", sum);
-    println!("Average {:.2}", mean);
-    println!("Standard Deviation {:.2}", standard_deviation);
-    println!("Median {:.2}", median);
-    println!("25th Percentile (Q1) {:.2}", q1);
-    println!("75th Percentile (Q3) {:.2}", q3);
-    println!("Interquartile Range {:.2}", interquartile_range);
-    println!("Range {:.2}", range);
-    println!("Variance {:.2}", variance);
-    println!("Coefficient of variation {:.2}%", coefficient_of_variation);
-    println!("Skewness {:.2}", skewness);
+    println!("Average: {:.2}", mean);
+    println!("Standard Deviation: {:.2}", standard_deviation);
+    println!("Median: {:.2}", median);
+    println!("25th Percentile (Q1): {:.2}", q1);
+    println!("75th Percentile (Q3): {:.2}", q3);
+    println!("Interquartile Range: {:.2}", interquartile_range);
+    println!("Range: {:.2}", range);
+    println!("Variance: {:.2}", variance);
+    println!("Coefficient of variation: {:.2} %", coefficient_of_variation);
 
+    match skewness {
+        Some(skew) => println!("Skewness: {:.2}", skew),
+        None => println!("Skewness: Not enough data to calculate."),
+    }
 }
