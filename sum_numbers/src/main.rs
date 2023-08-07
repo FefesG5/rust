@@ -1,4 +1,5 @@
 use std::io;
+use std::collections::HashMap;
 
 fn kahan_sum(numbers: &[f64]) -> f64 {
     let mut sum = 0.0;
@@ -95,6 +96,31 @@ fn calculate_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> Opt
     Some(skewness)
 }
 
+fn calculate_mode(numbers: &[f64]) -> Vec<(f64, usize)> {
+    
+    let mut frequency_map: HashMap<String, usize> = HashMap::new();
+
+    for &num in numbers {
+        let num_str = num.to_string();
+        *frequency_map.entry(num_str).or_insert(0) += 1;
+    }
+
+    let mut max_frequency = 0;
+    let mut modes = Vec::new();
+
+    for (value_str, &frequency) in &frequency_map {
+        let num = value_str.parse::<f64>().unwrap();
+        if frequency > max_frequency {
+            max_frequency = frequency;
+            modes.clear();
+            modes.push((num, frequency));
+        } else if frequency == max_frequency {
+            modes.push((num, frequency));
+        }
+    }
+
+    modes
+}
 
 fn main() {
     println!("This program finds the sum, average, and standard deviation of a list of numbers!");
@@ -126,7 +152,8 @@ fn main() {
     let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
     let skewness = calculate_skewness(&numbers, mean, standard_deviation);
 
-   
+    let modes = calculate_mode(&numbers);
+
     println!("Numbers: {:?}", numbers);
     println!("Sum: {:.2}", sum);
     println!("Average: {:.2}", mean);
@@ -142,5 +169,14 @@ fn main() {
     match skewness {
         Some(skew) => println!("Skewness: {:.2}", skew),
         None => println!("Skewness: Not enough data to calculate."),
+    }
+    match modes.len() {
+        0 => println!("Modes: No mode found."),
+        _ => {
+            println!("Mode(s): ");
+            for (mode_value, frequency) in modes{
+                println!("{:.2} (Frequency: {})", mode_value, frequency);
+            }
+        }
     }
 }
