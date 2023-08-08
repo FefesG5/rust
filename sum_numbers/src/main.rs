@@ -136,6 +136,9 @@ fn main() {
     if numbers.is_empty(){
         println!("No valid numbers entered. Please enter a list of numbers.");
         return
+    } else if numbers.len() != input.split_whitespace().count() {
+        println!("Some values could not be parsed. Please enter valid numbers.");
+        return
     }
     
     let sum = kahan_sum(&numbers);
