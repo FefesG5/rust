@@ -1,5 +1,9 @@
-use std::io;
+use std::error::Error;
+use std::fs::File;
+use std::io::{self, Write};
+use std::process;
 use std::collections::HashMap;
+use csv::ReaderBuilder;
 
 fn kahan_sum(numbers: &[f64]) -> f64 {
     let mut sum = 0.0;
@@ -122,24 +126,70 @@ fn calculate_mode(numbers: &[f64]) -> Vec<(f64, usize)> {
     modes
 }
 
-fn main() {
-    println!("This program finds the sum, average, and standard deviation of a list of numbers!");
+fn read_manual_input() -> Result<Vec<f64>, Box<dyn Error>>{
     println!("Enter a list of numbers separated by spaces: ");
     let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("Failed to read line");
+    io::stdin().read_line(&mut input)?;
 
     let numbers: Vec<f64> = input
         .split_whitespace()
         .filter_map(|s| s.parse::<f64>().ok())
         .collect();
 
-    if numbers.is_empty(){
-        println!("No valid numbers entered. Please enter a list of numbers.");
-        return
-    } else if numbers.len() != input.split_whitespace().count() {
-        println!("Some values could not be parsed. Please enter valid numbers.");
-        return
+    Ok(numbers)
+}
+
+fn read_csv_file(file: File) -> Result<Vec<f64>, Box<dyn Error>> {
+    let mut rdr = ReaderBuilder::new().has_headers(false).from_reader(file);
+
+    let mut numbers: Vec<f64> = Vec::new();
+
+    for result in rdr.records(){
+        let record = result?;
+        for field in record.iter(){
+            if let Ok(number) = field.parse::<f64>(){
+                numbers.push(number);
+            } else {
+                eprintln!("Ignoring invalid numbers: {}", field);
+            }
+        }
     }
+
+    Ok(numbers)
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    println!("This program finds the sum, average, and standard deviation of a list of numbers!");
+    println!("Enter 'M' for manual input of 'F' for reading from a CSV file: " );
+
+    let mut input_choice = String::new();
+    io::stdin().read_line(&mut input_choice)?;
+
+    let numbers: Vec<f64>;
+
+    match input_choice.trim().to_lowercase().as_str(){
+        "m" => {
+            numbers = read_manual_input()?;
+        }
+        "f" => {
+            println!("Enter the CSV file path: ");
+            let mut file_path = String::new();
+            io::stdin().read_line(&mut file_path)?;
+
+            let file = File::open(file_path.trim())?;
+            numbers = read_csv_file(file)?;
+        }
+        _ => {
+            eprintln!("Invalid choice. Exiting...");
+            process::exit(1);
+        }
+    }  
+    
+    if numbers.is_empty() {
+        println!("No valid numbers found.");
+            process::exit(1);
+    }
+    
     
     let sum = kahan_sum(&numbers);
     let mean = calculate_mean(&numbers);
@@ -182,4 +232,6 @@ fn main() {
             }
         }
     }
+
+    Ok(())
 }
