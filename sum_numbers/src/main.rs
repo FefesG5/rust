@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::fs::File;
-use std::io::{self, Write};
+use std::io;
 use std::process;
 use std::collections::HashMap;
 use csv::ReaderBuilder;
