@@ -6,9 +6,18 @@ use serde::Deserialize;
 struct Info {
     username: String,
 }
+#[derive(Deserialize)]
+struct Numbers {
+    numbers: Vec<f64>,
+}
 
 async fn index(info: web::Json<Info>) -> Result<HttpResponse, actix_web::Error> {
     Ok(HttpResponse::Ok().body(format!("Welcome {}!", info.username)))
+}
+
+async fn print_numbers(numbers: web::Json<Numbers>) -> HttpResponse {
+    println!("Received numbers: {:?}", numbers.numbers);
+    HttpResponse::Ok().finish()
 }
 
 fn kahan_sum(numbers: &[f64]) -> f64 {
@@ -42,9 +51,10 @@ async fn manual_hello() -> impl Responder {
 async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
-        App::new().route("/", web::post().to(index))
+        App::new()
+            .route("/", web::post().to(index))
             .service(hello)
-            .service(web::resource("/").route(web::post().to(index)))
+            .service(web::resource("/numbers").route(web::post().to(print_numbers)))
             .route("/hey", web::get().to(manual_hello))
     })
     .bind(("127.0.0.1", 8080))?
