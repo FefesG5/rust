@@ -1,5 +1,15 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 use env_logger;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct Info {
+    username: String,
+}
+
+async fn index(info: web::Json<Info>) -> Result<HttpResponse, actix_web::Error> {
+    Ok(HttpResponse::Ok().body(format!("Welcome {}!", info.username)))
+}
 
 fn kahan_sum(numbers: &[f64]) -> f64 {
     let mut sum = 0.0;
@@ -23,17 +33,6 @@ async fn hello() -> impl Responder {
     HttpResponse::Ok().body("This server is running")
 }
 
-#[post("/echo")]
-async fn echo(numbers: web::Json<Vec<f64>>) -> impl Responder {
-    let num_list = &numbers;
-
-    let average: f64 = calculate_mean(num_list);
-
-    println!("Received numbers: {:?}", num_list);
-    println!("Mean: {:.}", average);
-
-    HttpResponse::Ok().json(average)
-}
 
 async fn manual_hello() -> impl Responder {
     HttpResponse::Ok().body("Hey there!")
@@ -42,12 +41,10 @@ async fn manual_hello() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
-    env_logger::init();
-
     HttpServer::new(|| {
-        App::new()
+        App::new().route("/", web::post().to(index))
             .service(hello)
-            .service(echo)
+            .service(web::resource("/").route(web::post().to(index)))
             .route("/hey", web::get().to(manual_hello))
     })
     .bind(("127.0.0.1", 8080))?
