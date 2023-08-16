@@ -11,15 +11,6 @@ struct Numbers {
     numbers: Vec<f64>,
 }
 
-async fn index(info: web::Json<Info>) -> Result<HttpResponse, actix_web::Error> {
-    Ok(HttpResponse::Ok().body(format!("Welcome {}!", info.username)))
-}
-
-async fn print_numbers(numbers: web::Json<Numbers>) -> HttpResponse {
-    println!("Received numbers: {:?}", numbers.numbers);
-    HttpResponse::Ok().finish()
-}
-
 fn kahan_sum(numbers: &[f64]) -> f64 {
     let mut sum = 0.0;
     let mut c = 0.0;
@@ -37,14 +28,34 @@ fn calculate_mean(numbers: &[f64]) -> f64 {
     sum / (numbers.len() as f64)
 }
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("This server is running")
+fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
+    let mut sum_squared_diff = 0.0;
+    for &num in numbers {
+        let diff = num - mean;
+        sum_squared_diff += diff * diff
+    }
+    let mean_squared_diff = sum_squared_diff / (numbers.len() as f64);
+    mean_squared_diff.sqrt()
 }
 
+#[get("/")]
+async fn check_server_status() -> impl Responder {
+    HttpResponse::Ok().body("This server is running..")
+}
 
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
+    let mean = calculate_mean(&numbers.numbers);
+    let standard_deviation = calculate_standard_deviation(&numbers.numbers, mean);
+    println!("Received numbers: {:?}", numbers.numbers);
+    println!("Calculated mean: {:.}", mean);
+    println!("Calculated standard deviation: {:.}", standard_deviation);
+
+    let response_body = format!(
+        "Received numbers: {:?}\nMean: {}\nStandard Deviation {}",
+        numbers.numbers, mean, standard_deviation
+    );
+
+    HttpResponse::Ok().body(response_body)
 }
 
 #[actix_web::main]
@@ -52,10 +63,8 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .route("/", web::post().to(index))
-            .service(hello)
-            .service(web::resource("/numbers").route(web::post().to(print_numbers)))
-            .route("/hey", web::get().to(manual_hello))
+            .service(check_server_status)
+            .service(web::resource("/numbers").route(web::post().to(return_calculations)))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
