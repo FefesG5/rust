@@ -1,41 +1,15 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
-use env_logger;
+
+#[allow(unused_imports)]
 use serde::Deserialize;
 
-#[derive(Deserialize)]
-struct Info {
-    username: String,
-}
+mod calculations;
+
+use calculations::{calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile};
+
 #[derive(Deserialize)]
 struct Numbers {
     numbers: Vec<f64>,
-}
-
-fn kahan_sum(numbers: &[f64]) -> f64 {
-    let mut sum = 0.0;
-    let mut c = 0.0;
-    for &num in numbers{
-        let y = num - c;
-        let t = sum + y;
-        c = (t - sum) - y;
-        sum = t;
-    }
-    sum
-}
-
-fn calculate_mean(numbers: &[f64]) -> f64 {
-    let sum = kahan_sum(numbers);
-    sum / (numbers.len() as f64)
-}
-
-fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
-    let mut sum_squared_diff = 0.0;
-    for &num in numbers {
-        let diff = num - mean;
-        sum_squared_diff += diff * diff
-    }
-    let mean_squared_diff = sum_squared_diff / (numbers.len() as f64);
-    mean_squared_diff.sqrt()
 }
 
 #[get("/")]
@@ -46,16 +20,25 @@ async fn check_server_status() -> impl Responder {
 async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
     let mean = calculate_mean(&numbers.numbers);
     let standard_deviation = calculate_standard_deviation(&numbers.numbers, mean);
+    let median = calculate_median(&numbers.numbers);
+    let q1_percentile = calculate_percentile(&numbers.numbers, 25.0);
+    let q3_percentile = calculate_percentile(&numbers.numbers, 75.0); 
+
     println!("Received numbers: {:?}", numbers.numbers);
+    println!("Basic Calculations");
     println!("Calculated mean: {:.}", mean);
     println!("Calculated standard deviation: {:.}", standard_deviation);
 
-    let response_body = format!(
-        "Received numbers: {:?}\nMean: {}\nStandard Deviation {}",
-        numbers.numbers, mean, standard_deviation
-    );
+    let response_data = serde_json::json!({
+        "receivedNumbers": numbers.numbers,
+        "mean": mean,
+        "standardDeviation": standard_deviation,
+        "median": median,
+        "q1Percentile": q1_percentile,
+        "q3Percentile": q3_percentile
+    });
 
-    HttpResponse::Ok().body(response_body)
+    HttpResponse::Ok().json(response_data)
 }
 
 #[actix_web::main]
