@@ -5,7 +5,10 @@ use serde::Deserialize;
 
 mod calculations;
 
-use calculations::{calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile};
+use calculations::{calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile, calculate_interquartile_range,
+calculate_range,
+calculate_variance
+};
 
 #[derive(Deserialize)]
 struct Numbers {
@@ -23,6 +26,9 @@ async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
     let median = calculate_median(&numbers.numbers);
     let q1_percentile = calculate_percentile(&numbers.numbers, 25.0);
     let q3_percentile = calculate_percentile(&numbers.numbers, 75.0); 
+    let interquartile_range = calculate_interquartile_range(&numbers.numbers);
+    let range = calculate_range(&numbers.numbers);
+    let variance = calculate_variance(&numbers.numbers, mean);
 
     println!("Received numbers: {:?}", numbers.numbers);
     println!("Basic Calculations");
@@ -35,7 +41,10 @@ async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
         "standardDeviation": standard_deviation,
         "median": median,
         "q1Percentile": q1_percentile,
-        "q3Percentile": q3_percentile
+        "q3Percentile": q3_percentile,
+        "interquartileRange": interquartile_range,
+        "range": range,
+        "variance": variance
     });
 
     HttpResponse::Ok().json(response_data)
