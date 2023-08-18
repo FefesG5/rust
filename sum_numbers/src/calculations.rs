@@ -54,3 +54,24 @@ pub fn calculate_percentile(numbers: &[f64], percentile:f64) -> f64 {
         lower_value + (percentile / 100.0) * (upper_value - lower_value)
     }
 }
+
+pub fn calculate_interquartile_range(numbers: &[f64]) -> f64 {
+    let q3 = calculate_percentile(numbers, 75.0);
+    let q1 = calculate_percentile(numbers, 25.0);
+    q3 - q1
+}
+
+pub fn calculate_range(numbers: &[f64]) -> f64{
+    let max_val = numbers.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+    let min_val = numbers.iter().cloned().fold(f64::INFINITY, f64::min);
+    max_val - min_val
+}
+
+pub fn calculate_variance(numbers: &[f64], mean: f64) -> f64 {
+    let mut sum_squared_diff = 0.0;
+    for &num in numbers {
+        let diff = num - mean;
+        sum_squared_diff += diff * diff
+    }
+    sum_squared_diff / (numbers.len() as f64)
+}
