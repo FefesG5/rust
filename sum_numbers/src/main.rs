@@ -1,13 +1,15 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 
+
 #[allow(unused_imports)]
 use serde::Deserialize;
 
 mod calculations;
 
 use calculations::{calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile, calculate_interquartile_range,
-calculate_range,
-calculate_variance
+calculate_range, calculate_variance, calculate_coefficient_of_variation,
+calculate_skewness,
+calculate_mode
 };
 
 #[derive(Deserialize)]
@@ -29,6 +31,9 @@ async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
     let interquartile_range = calculate_interquartile_range(&numbers.numbers);
     let range = calculate_range(&numbers.numbers);
     let variance = calculate_variance(&numbers.numbers, mean);
+    let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
+    let skewness = calculate_skewness(&numbers.numbers, mean, standard_deviation);
+    let mode = calculate_mode(&numbers.numbers);
 
     println!("Received numbers: {:?}", numbers.numbers);
     println!("Basic Calculations");
@@ -44,7 +49,10 @@ async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
         "q3Percentile": q3_percentile,
         "interquartileRange": interquartile_range,
         "range": range,
-        "variance": variance
+        "variance": variance,
+        "coefficient_of_variation": coefficient_of_variation,
+        "skewness": skewness,
+        "mode": mode
     });
 
     HttpResponse::Ok().json(response_data)
