@@ -99,11 +99,14 @@ The second version of the Rust Calculator is an enhanced command-line calculator
 Input Numbers: The program will prompt you to enter a list of numbers separated by spaces. For example:
 
 This program finds the sum, average, and standard deviation of a list of numbers!
+
 Enter 'M' for manual input or 'F' for reading from a CSV file.
+
 Enter Your Choice:
 
-'M' to manually input the numbers by yourself using spaces between the numbers.
-'F' to read from a CSV file. Provide the file path (e.g., C:\Users\Downloads\testfile.csv).
+- 'M' to manually input the numbers by yourself using spaces between the numbers.
+- 'F' to read from a CSV file. Provide the file path (e.g., C:\Users\Downloads\testfile.csv).
+
 
 ## Contributing
 
