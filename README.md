@@ -49,20 +49,15 @@ This is a command-line statistical calculator. The program allows you to perform
 
    This command tells Cargo (the Rust package manager) to compile the code and execute the resulting binary. After running this command, you should see the program's output in the terminal, which will display the calculated statistical measures based on the input you provide.
 
-4. **Input Numbers**: This program finds the sum, average, and standard deviation of a list of numbers! Enter 'M' for manual input or 'F' for reading from a CSV file.
-
-5. **Enter Your Choice**:
-
-   - 'M' to manually input the numbers by yourself using spaces between the numbers.
-   - 'F' to read from a CSV file. Provide the file path (e.g., C:\Users\Downloads\testfile.csv).
-
+4. **Input Numbers**: This program finds the sum, average, and standard deviation of a list of numbers!
+   
    Example Input:
 
    ```plaintext
    1.5 2.8 3.2 4.1 5.6
    ```
 
-6. **View Results**: The program will display the calculated statistical measures for the provided numbers:
+5. **View Results**: The program will display the calculated statistical measures for the provided numbers:
 
 ```plaintext
 Numbers: [1.5, 2.8, 3.2, 4.1, 5.6]
