@@ -4,7 +4,8 @@ use calculations::{
     kahan_sum,
     calculate_mean,
     calculate_standard_deviation,
-    calculate_median
+    calculate_median,
+    calculate_percentile
 };
 
 #[cfg(test)]
@@ -136,5 +137,17 @@ mod tests {
         let calculated_median = calculate_median(&numbers);
 
         assert_eq!(calculated_median, 3.5);
+    }
+
+    
+
+    #[test]
+    fn test_percentile_25th_calculations(){
+        let numbers = [1.0, 2.0, 3.0, 4.0, 5.1];
+        let epsilon = 1e-10;
+
+        let calculated_25_percentile = calculate_percentile(&numbers, 25.0);
+
+        assert_eq!(calculated_25_percentile, 2.25);
     }
 }
