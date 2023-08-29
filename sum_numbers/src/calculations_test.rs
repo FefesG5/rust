@@ -20,24 +20,31 @@ mod tests {
         [-1.0, -2.0, -3.0, -4.0, -5.1]
     }
 
+
+    // ---------------------------------------- //
+    // Kahan Tests
     #[test]
     fn test_kahan_calculations_standard(){
         let numbers = common_numbers();
         assert_eq!(kahan_sum(&numbers), 15.1);
     }
-
+    
     #[test]
     fn test_kahan_calculations_large_numbers(){
         let numbers = [1e15, 1e15, 1e15];
         assert_eq!(kahan_sum(&numbers), 3e15);
     }
-
+    
     #[test]
     fn test_kahan_calculations_precision_loss(){
         let numbers = [1.0e10, 1.0, -1.0e10];
         assert_eq!(kahan_sum(&numbers), 1.0);
     }
+    // ---------------------------------------- //
+    
 
+    // ---------------------------------------- //
+    // Mean Tests
     #[test]
     fn test_mean_calculations_standard(){
         let numbers = common_numbers();
@@ -64,7 +71,11 @@ mod tests {
 
         assert_eq!(calculated_mean, expected_mean);
     }
+    // ---------------------------------------- //
 
+
+    // ---------------------------------------- //
+    // Mean Tests
     #[test]
     fn test_standard_deviation_calculations(){
         let numbers = common_numbers();
@@ -122,7 +133,11 @@ mod tests {
 
         expected_standard_deviation
     }
+    // ---------------------------------------- //
 
+
+    // ---------------------------------------- //
+    // Median Tests
     #[test]
     fn test_median_calculations_odd_numbers_of_elements(){
         let numbers = common_numbers();
@@ -138,16 +153,38 @@ mod tests {
 
         assert_eq!(calculated_median, 3.5);
     }
+    // ---------------------------------------- //
 
-    
-
+    // ---------------------------------------- //
+    // Percentile Tests
     #[test]
     fn test_percentile_25th_calculations(){
         let numbers = [1.0, 2.0, 3.0, 4.0, 5.1];
-        let epsilon = 1e-10;
 
         let calculated_25_percentile = calculate_percentile(&numbers, 25.0);
 
         assert_eq!(calculated_25_percentile, 2.25);
     }
+
+    #[test]
+    fn test_percentile_75th_calculations(){
+        let numbers = [1.0, 2.0, 3.0, 4.0, 5.1];
+
+        let calculated_75_percentile = calculate_percentile(&numbers, 75.0);
+
+        assert_eq!(calculated_75_percentile, 4.824999999999999);
+    }
+
+    #[test]
+    fn test_percentile_repeated_values_calculations(){
+        let numbers = [2.5, 2.5, 2.5, 2.5, 2.5];
+
+        let calculated_50_percentile = calculate_percentile(&numbers, 50.0);
+
+        assert_eq!(calculated_50_percentile, 2.5);
+    }
+
+    // ---------------------------------------- //
+
+
 }
