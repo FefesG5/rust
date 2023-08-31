@@ -5,7 +5,8 @@ use calculations::{
     calculate_mean,
     calculate_standard_deviation,
     calculate_median,
-    calculate_percentile
+    calculate_percentile,
+    calculate_interquartile_range
 };
 
 #[cfg(test)]
@@ -185,6 +186,7 @@ mod tests {
     }
 
     // ---------------------------------------- //
-
-
+    // calculate_interquartile_range
+    #[test]
+    fn test_interquartile_calculations(){}
 }
