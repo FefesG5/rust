@@ -6,7 +6,9 @@ use serde::Deserialize;
 
 mod calculations;
 
-use calculations::{calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile, calculate_interquartile_range,
+use calculations::{
+    round_to_decimal_places,
+    calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile, calculate_interquartile_range,
 calculate_range, calculate_variance, calculate_coefficient_of_variation,
 calculate_skewness,
 calculate_mode
@@ -32,25 +34,30 @@ async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
     let range = calculate_range(&numbers.numbers);
     let variance = calculate_variance(&numbers.numbers, mean);
     let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
-    let skewness = calculate_skewness(&numbers.numbers, mean, standard_deviation);
+
+    let skewness = match calculate_skewness(&numbers.numbers, mean, standard_deviation) {
+        Some(value) => round_to_decimal_places(value, 9),
+        None => f64::NAN,
+    };
+
     let mode = calculate_mode(&numbers.numbers);
 
     println!("Received numbers: {:?}", numbers.numbers);
     println!("Basic Calculations");
-    println!("Calculated mean: {:.}", mean);
+    println!("Calculated mean: {:.}", round_to_decimal_places(mean, 9));
     println!("Calculated standard deviation: {:.}", standard_deviation);
 
     let response_data = serde_json::json!({
         "receivedNumbers": numbers.numbers,
-        "mean": mean,
-        "standardDeviation": standard_deviation,
-        "median": median,
-        "q1Percentile": q1_percentile,
-        "q3Percentile": q3_percentile,
-        "interquartileRange": interquartile_range,
-        "range": range,
-        "variance": variance,
-        "coefficient_of_variation": coefficient_of_variation,
+        "mean": round_to_decimal_places(mean, 9),
+        "standardDeviation": round_to_decimal_places(standard_deviation, 9),
+        "median": round_to_decimal_places(median, 9),
+        "q1Percentile": round_to_decimal_places(q1_percentile, 9),
+        "q3Percentile": round_to_decimal_places(q3_percentile, 9),
+        "interquartileRange": round_to_decimal_places(interquartile_range, 9),
+        "range": round_to_decimal_places(range, 9),
+        "variance": round_to_decimal_places(variance, 9),
+        "coefficient_of_variation": round_to_decimal_places(coefficient_of_variation, 9),
         "skewness": skewness,
         "mode": mode
     });
