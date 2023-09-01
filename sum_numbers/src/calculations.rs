@@ -13,6 +13,11 @@ pub fn kahan_sum(numbers: &[f64]) -> f64 {
     sum
 }
 
+pub fn round_to_decimal_places(value: f64, decimal_places: usize) -> f64 {
+    let multiplier = 10f64.powi(decimal_places as i32);
+    (value * multiplier).round() / multiplier
+}
+
 pub fn calculate_mean(numbers: &[f64]) -> f64 {
     let sum = kahan_sum(numbers);
     sum / (numbers.len() as f64)
