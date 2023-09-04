@@ -160,7 +160,7 @@ mod tests {
     // Percentile Tests
     #[test]
     fn test_percentile_25th_calculations(){
-        let numbers = [1.0, 2.0, 3.0, 4.0, 5.1];
+        let numbers = common_numbers();
 
         let calculated_25_percentile = calculate_percentile(&numbers, 25.0);
 
@@ -169,7 +169,7 @@ mod tests {
 
     #[test]
     fn test_percentile_75th_calculations(){
-        let numbers = [1.0, 2.0, 3.0, 4.0, 5.1];
+        let numbers = common_numbers();
 
         let calculated_75_percentile = calculate_percentile(&numbers, 75.0);
 
@@ -188,5 +188,13 @@ mod tests {
     // ---------------------------------------- //
     // calculate_interquartile_range
     #[test]
-    fn test_interquartile_calculations(){}
+    fn test_interquartile_calculations(){
+        let numbers = common_numbers();
+
+        let calculated_interquartile_range = calculate_interquartile_range(&numbers);
+
+        let expected_interquartile_range = 4.824999999999999 - 2.25;
+
+        assert_eq!(calculated_interquartile_range, expected_interquartile_range)
+    }
 }
