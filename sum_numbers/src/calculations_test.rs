@@ -6,7 +6,8 @@ use calculations::{
     calculate_standard_deviation,
     calculate_median,
     calculate_percentile,
-    calculate_interquartile_range
+    calculate_interquartile_range,
+    calculate_range
 };
 
 #[cfg(test)]
@@ -76,7 +77,7 @@ mod tests {
 
 
     // ---------------------------------------- //
-    // Mean Tests
+    // Standard Deviation Tests
     #[test]
     fn test_standard_deviation_calculations(){
         let numbers = common_numbers();
@@ -186,7 +187,7 @@ mod tests {
     }
 
     // ---------------------------------------- //
-    // calculate_interquartile_range
+    // Interquartile Range Tests
     #[test]
     fn test_interquartile_calculations(){
         let numbers = common_numbers();
@@ -197,4 +198,42 @@ mod tests {
 
         assert_eq!(calculated_interquartile_range, expected_interquartile_range)
     }
+
+    #[test]
+    fn test_interquartile_range_negative_numbers(){
+        let numbers = common_negative_numbers();
+
+        let calculated_negative_interquartile_range = calculate_interquartile_range(&numbers);
+
+        let expected_negative_interquartile_range = 2.5;
+
+        assert_eq!(calculated_negative_interquartile_range, expected_negative_interquartile_range);
+    }
+    // ---------------------------------------- //
+
+    // ---------------------------------------- //
+    // Range Tests
+    #[test]
+    fn test_range_standard_numbers(){
+        let numbers = common_numbers();
+
+        let calculated_range = calculate_range(&numbers);
+
+        let expected_range = 4.1;
+
+        assert_eq!(calculated_range, expected_range)
+
+    }
+
+    #[test]
+    fn test_range_negative_numbers(){
+        let numbers = common_negative_numbers();
+
+        let calculated_range = calculate_range(&numbers);
+
+        let expected_range = 4.1;
+
+        assert_eq!(calculated_range, expected_range)
+    }
+
 }
