@@ -7,7 +7,8 @@ use calculations::{
     calculate_median,
     calculate_percentile,
     calculate_interquartile_range,
-    calculate_range
+    calculate_range,
+    calculate_variance
 };
 
 #[cfg(test)]
@@ -235,5 +236,43 @@ mod tests {
 
         assert_eq!(calculated_range, expected_range)
     }
+    // ---------------------------------------- //
+  
+    // ---------------------------------------- //
+    // Variance Tests
+    #[test]
+    fn test_variance_standard_numbers(){
+        let numbers = common_numbers();
+        let calculated_mean = calculate_mean(&numbers);
+        let epsilon = 1e-10;
 
+        let calculated_variance = calculate_variance(&numbers, calculated_mean);
+
+        let expected_variance = 2.0816;
+
+        assert!(
+            (calculated_variance - expected_variance).abs() < epsilon,
+            "Expected variance: {}, but got: {}",
+            expected_variance,
+            calculated_variance
+        );
+    }
+
+    #[test]
+    fn test_variance_negative_numbers(){
+        let numbers = common_negative_numbers();
+        let calculated_mean = calculate_mean(&numbers);
+        let epsilon = 1e-10;
+
+        let calculated_variance = calculate_variance(&numbers, calculated_mean);
+
+        let expected_variance = 2.0816;
+
+        assert!(
+            (calculated_variance - expected_variance).abs() < epsilon,
+            "Expected variance: {}, but got: {}",
+            expected_variance,
+            calculated_variance
+        );
+    }
 }
