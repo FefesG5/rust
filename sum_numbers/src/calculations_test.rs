@@ -8,7 +8,8 @@ use calculations::{
     calculate_percentile,
     calculate_interquartile_range,
     calculate_range,
-    calculate_variance
+    calculate_variance,
+    calculate_coefficient_of_variation
 };
 
 #[cfg(test)]
@@ -273,6 +274,29 @@ mod tests {
             "Expected variance: {}, but got: {}",
             expected_variance,
             calculated_variance
+        );
+    }
+    // ---------------------------------------- //
+  
+    // ---------------------------------------- //
+    //  Coefficient of Variation Tests
+
+    #[test]
+    fn test_coefficient_of_variation_standard(){
+        let numbers = common_numbers();
+        let mean = calculate_mean(&numbers);
+        let standard_deviation = calculate_standard_deviation(&numbers, mean);
+
+        let calculated_coefficient = calculate_coefficient_of_variation(mean, standard_deviation);
+
+        let expected_coefficient = 47.774010057937566;
+        let epsilon = 1e-10;
+
+        assert!(
+            (calculated_coefficient - expected_coefficient).abs() < epsilon,
+            "Calculated coefficient did not match expected value within tolerance: calculated = {}, expected = {}",
+            calculated_coefficient,
+            expected_coefficient
         );
     }
 }
