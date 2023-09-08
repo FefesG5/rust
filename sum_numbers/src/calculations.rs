@@ -33,6 +33,21 @@ pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
     mean_squared_diff.sqrt()
 }
 
+// pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
+//     let n = numbers.len() as f64;
+//     if n < 2.0 {
+//         return 0.0;
+//     }
+    
+//     let mut sum_squared_diff = 0.0;
+//     for &num in numbers {
+//         let diff = num - mean;
+//         sum_squared_diff += diff * diff;
+//     }
+//     let mean_squared_diff = sum_squared_diff / (n - 1.0);
+//     mean_squared_diff.sqrt()
+// }
+
 pub fn calculate_median(numbers: &[f64]) ->f64 {
     let mut sorted_numbers = numbers.to_vec();
     sorted_numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
@@ -86,6 +101,22 @@ pub fn calculate_coefficient_of_variation(mean:f64, standard_deviation: f64) -> 
     (standard_deviation / mean ) * 100.0
 }
 
+// pub fn calculate_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> Option<f64> {
+//     let n = numbers.len() as f64;
+//     if n < 3.0 || standard_deviation == 0.0 {
+//         return None;
+//     }
+
+//     let mut sum_cubed_diff = 0.0;
+//     for &num in numbers {
+//         let diff = num - mean;
+//         sum_cubed_diff += diff.powi(3);
+//     }
+
+//     let skewness = (n * (n - 1.0).sqrt()) / ((n - 2.0).sqrt()) * sum_cubed_diff / (n * standard_deviation.powi(3));
+//     Some(skewness)
+// }
+
 pub fn calculate_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> Option<f64> {
     let n = numbers.len() as f64;
     if n < 3.0 || standard_deviation == 0.0 {
@@ -95,9 +126,10 @@ pub fn calculate_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) ->
     let mut sum_cubed_diff = 0.0;
     for &num in numbers {
         let diff = num - mean;
-        sum_cubed_diff += diff * diff * diff;
+        sum_cubed_diff += diff.powi(3);
     }
-    let skewness = (sum_cubed_diff / (n * standard_deviation.powi(3))).sqrt();
+
+    let skewness = (n * sum_cubed_diff) / ((n - 1.0) * (n - 2.0) * standard_deviation.powi(3));
     Some(skewness)
 }
 
