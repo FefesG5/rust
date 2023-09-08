@@ -9,7 +9,8 @@ use calculations::{
     calculate_interquartile_range,
     calculate_range,
     calculate_variance,
-    calculate_coefficient_of_variation
+    calculate_coefficient_of_variation,
+    calculate_skewness
 };
 
 #[cfg(test)]
@@ -298,5 +299,26 @@ mod tests {
             calculated_coefficient,
             expected_coefficient
         );
+    }
+    // ---------------------------------------- //
+  
+    // ---------------------------------------- //
+    //  Skewness Tests
+    #[test]
+    fn test_skewness_standard(){
+        let numbers = common_numbers();
+        let mean = calculate_mean(&numbers);
+        let standard_deviation = calculate_standard_deviation(&numbers, mean);
+
+        let skewness = calculate_skewness(&numbers, mean, 1.6125);
+
+        let expected_skewness = Some(0.063184795);
+        let epsilon = 1e-4;
+
+        
+        println!("Calculated skewness: {:?}", skewness);
+        println!("Expected skewness: {:?}", expected_skewness);
+
+        assert!(matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon))
     }
 }
