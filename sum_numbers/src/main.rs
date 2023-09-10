@@ -8,10 +8,16 @@ mod calculations;
 
 use calculations::{
     round_to_decimal_places,
-    calculate_mean, calculate_standard_deviation, calculate_median, calculate_percentile, calculate_interquartile_range,
-calculate_range, calculate_variance, calculate_coefficient_of_variation,
-calculate_skewness,
-calculate_mode
+    calculate_mean, 
+    calculate_sample_standard_deviation,
+    calculate_median, 
+    calculate_percentile, 
+    calculate_interquartile_range,
+    calculate_range, 
+    calculate_variance, 
+    calculate_coefficient_of_variation,
+    calculate_skewness,
+    calculate_mode
 };
 
 #[derive(Deserialize)]
@@ -26,7 +32,7 @@ async fn check_server_status() -> impl Responder {
 
 async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
     let mean = calculate_mean(&numbers.numbers);
-    let standard_deviation = calculate_standard_deviation(&numbers.numbers, mean);
+    let standard_deviation = calculate_sample_standard_deviation(&numbers.numbers, mean);
     let median = calculate_median(&numbers.numbers);
     let q1_percentile = calculate_percentile(&numbers.numbers, 25.0);
     let q3_percentile = calculate_percentile(&numbers.numbers, 75.0); 

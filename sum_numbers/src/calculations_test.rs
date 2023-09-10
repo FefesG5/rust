@@ -3,7 +3,7 @@ mod calculations;
 use calculations::{
     kahan_sum,
     calculate_mean,
-    calculate_standard_deviation,
+    calculate_sample_standard_deviation,
     calculate_median,
     calculate_percentile,
     calculate_interquartile_range,
@@ -85,16 +85,17 @@ mod tests {
     fn test_standard_deviation_calculations(){
         let numbers = common_numbers();
         let mean = calculate_mean(&numbers);
+        let epsilon = 1e-10;
        
-        let calculated_standard_deviation = calculate_standard_deviation(&numbers, mean);
+        let calculated_standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
 
-       assert_eq!(calculated_standard_deviation, calculate_expected_standard_deviation())
+        assert!((calculated_standard_deviation - calculate_expected_sample_standard_deviation()).abs() < epsilon);
     }
 
-    fn calculate_expected_standard_deviation() ->f64{
+    fn calculate_expected_sample_standard_deviation() -> f64 {
         let numbers = common_numbers();
         let expected_mean = (1.0 + 2.0 + 3.0 + 4.0 + 5.1) / 5.0;
-
+    
         let mut expected_squared_difference_sum = 0.0;
         for &x in numbers.iter() {
             let difference = x - expected_mean;
@@ -102,24 +103,22 @@ mod tests {
             expected_squared_difference_sum += squared_difference;
         }
         
-        let mean_of_squared_diff = expected_squared_difference_sum / numbers.len() as f64;
+        let mean_of_squared_diff = expected_squared_difference_sum / (numbers.len() - 1) as f64;
         let expected_standard_deviation = mean_of_squared_diff.sqrt();
-
+    
         expected_standard_deviation
     }
+    
 
     #[test]
     fn test_standard_deviation_calculations_negative_numbers(){
         let negative_numbers = common_negative_numbers();
         let mean = calculate_mean(&negative_numbers);
+        let epsilon = 1e-10;
        
-        let calculated_standard_deviation = calculate_standard_deviation(&negative_numbers, mean);
+        let calculated_standard_deviation = calculate_sample_standard_deviation(&negative_numbers, mean);
 
-        let expected_standard_deviation = calculate_expected_standard_deviation();
-
-        // Allow for small margin of error due to floating-point precision 
-       let epsilon = 1e-10;
-       assert!((calculated_standard_deviation - expected_standard_deviation).abs() < epsilon);
+       assert!((calculated_standard_deviation - calculate_expected_standard_deviation_negative_numbers()).abs() < epsilon);
     }
 
     fn calculate_expected_standard_deviation_negative_numbers() ->f64{
@@ -133,7 +132,7 @@ mod tests {
             expected_squared_difference_sum += squared_difference;
         }
         
-        let mean_of_squared_diff = expected_squared_difference_sum / negative_numbers.len() as f64;
+        let mean_of_squared_diff = expected_squared_difference_sum / (negative_numbers.len() - 1) as f64;
         let expected_standard_deviation = mean_of_squared_diff.sqrt();
 
         expected_standard_deviation
@@ -286,7 +285,7 @@ mod tests {
     fn test_coefficient_of_variation_standard(){
         let numbers = common_numbers();
         let mean = calculate_mean(&numbers);
-        let standard_deviation = calculate_standard_deviation(&numbers, mean);
+        let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
 
         let calculated_coefficient = calculate_coefficient_of_variation(mean, standard_deviation);
 
@@ -308,16 +307,12 @@ mod tests {
     fn test_skewness_standard(){
         let numbers = common_numbers();
         let mean = calculate_mean(&numbers);
-        let standard_deviation = calculate_standard_deviation(&numbers, mean);
+        let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
 
         let skewness = calculate_skewness(&numbers, mean, 1.6125);
 
         let expected_skewness = Some(0.063184795);
         let epsilon = 1e-4;
-
-        
-        println!("Calculated skewness: {:?}", skewness);
-        println!("Expected skewness: {:?}", expected_skewness);
 
         assert!(matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon))
     }
