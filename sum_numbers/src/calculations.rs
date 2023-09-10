@@ -23,15 +23,35 @@ pub fn calculate_mean(numbers: &[f64]) -> f64 {
     sum / (numbers.len() as f64)
 }
 
-pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
+pub fn calculate_sample_standard_deviation(numbers: &[f64], mean: f64) -> f64 {
     let mut sum_squared_diff = 0.0;
     for &num in numbers {
         let diff = num - mean;
-        sum_squared_diff += diff * diff
+        sum_squared_diff += diff * diff;
+    }
+    let mean_squared_diff = sum_squared_diff / ((numbers.len() - 1) as f64);
+    mean_squared_diff.sqrt()
+}
+
+pub fn calculate_population_standard_deviation(numbers: &[f64], mean: f64) -> f64 {
+    let mut sum_squared_diff = 0.0;
+    for &num in numbers {
+        let diff = num - mean;
+        sum_squared_diff += diff * diff;
     }
     let mean_squared_diff = sum_squared_diff / (numbers.len() as f64);
     mean_squared_diff.sqrt()
 }
+
+// pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
+//     let mut sum_squared_diff = 0.0;
+//     for &num in numbers {
+//         let diff = num - mean;
+//         sum_squared_diff += diff * diff
+//     }
+//     let mean_squared_diff = sum_squared_diff / (numbers.len() as f64);
+//     mean_squared_diff.sqrt()
+// }
 
 // pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
 //     let n = numbers.len() as f64;
