@@ -144,16 +144,16 @@ mod tests {
     // Median Tests
     #[test]
     fn test_median_calculations_odd_numbers_of_elements(){
-        let numbers = common_numbers();
-        let calculated_median = calculate_median(&numbers);
+        let mut numbers = common_numbers();
+        let calculated_median = calculate_median(&mut numbers[..]);
 
         assert_eq!(calculated_median, 3.0);
     }
 
     #[test]
     fn test_median_calculations_even_numbers_of_elements(){
-        let numbers = [1.0, 2.0, 3.0, 4.0, 5.1, 6.0];
-        let calculated_median = calculate_median(&numbers);
+        let mut numbers = [1.0, 2.0, 3.0, 4.0, 5.1, 6.0];
+        let calculated_median = calculate_median(&mut numbers[..]);
 
         assert_eq!(calculated_median, 3.5);
     }
