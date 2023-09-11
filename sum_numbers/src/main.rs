@@ -30,10 +30,10 @@ async fn check_server_status() -> impl Responder {
     HttpResponse::Ok().body("This server is running..")
 }
 
-async fn return_calculations(numbers: web::Json<Numbers>) -> HttpResponse {
+async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
     let mean = calculate_mean(&numbers.numbers);
     let standard_deviation = calculate_sample_standard_deviation(&numbers.numbers, mean);
-    let median = calculate_median(&numbers.numbers);
+    let median = calculate_median(&mut numbers.numbers[..]);
     let q1_percentile = calculate_percentile(&numbers.numbers, 25.0);
     let q3_percentile = calculate_percentile(&numbers.numbers, 75.0); 
     let interquartile_range = calculate_interquartile_range(&numbers.numbers);

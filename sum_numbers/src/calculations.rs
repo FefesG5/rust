@@ -43,40 +43,15 @@ pub fn calculate_population_standard_deviation(numbers: &[f64], mean: f64) -> f6
     mean_squared_diff.sqrt()
 }
 
-// pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
-//     let mut sum_squared_diff = 0.0;
-//     for &num in numbers {
-//         let diff = num - mean;
-//         sum_squared_diff += diff * diff
-//     }
-//     let mean_squared_diff = sum_squared_diff / (numbers.len() as f64);
-//     mean_squared_diff.sqrt()
-// }
+pub fn calculate_median(numbers: &mut[f64]) ->f64 {
+    //let mut sorted_numbers = numbers.to_vec();
+    numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-// pub fn calculate_standard_deviation(numbers: &[f64], mean:f64) -> f64 {
-//     let n = numbers.len() as f64;
-//     if n < 2.0 {
-//         return 0.0;
-//     }
-    
-//     let mut sum_squared_diff = 0.0;
-//     for &num in numbers {
-//         let diff = num - mean;
-//         sum_squared_diff += diff * diff;
-//     }
-//     let mean_squared_diff = sum_squared_diff / (n - 1.0);
-//     mean_squared_diff.sqrt()
-// }
-
-pub fn calculate_median(numbers: &[f64]) ->f64 {
-    let mut sorted_numbers = numbers.to_vec();
-    sorted_numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
-
-    let mid = sorted_numbers.len() / 2;
-    if sorted_numbers.len() % 2 == 0 {
-        (sorted_numbers[mid - 1] + sorted_numbers[mid]) / 2.0
+    let mid = numbers.len() / 2;
+    if numbers.len() % 2 == 0 {
+        (numbers[mid - 1] + numbers[mid]) / 2.0
     } else{
-        sorted_numbers[mid]
+        numbers[mid]
     }
 }
 
