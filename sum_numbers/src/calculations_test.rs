@@ -167,7 +167,7 @@ mod tests {
 
         let calculated_25_percentile = calculate_percentile(&numbers, 25.0);
 
-        assert_eq!(calculated_25_percentile, 2.25);
+        assert_eq!(calculated_25_percentile, 2.0);
     }
 
     #[test]
@@ -176,7 +176,7 @@ mod tests {
 
         let calculated_75_percentile = calculate_percentile(&numbers, 75.0);
 
-        assert_eq!(calculated_75_percentile, 4.824999999999999);
+        assert_eq!(calculated_75_percentile, 4.0);
     }
 
     #[test]
@@ -196,7 +196,7 @@ mod tests {
 
         let calculated_interquartile_range = calculate_interquartile_range(&numbers);
 
-        let expected_interquartile_range = 4.824999999999999 - 2.25;
+        let expected_interquartile_range = 2.00;
 
         assert_eq!(calculated_interquartile_range, expected_interquartile_range)
     }
@@ -207,9 +207,20 @@ mod tests {
 
         let calculated_negative_interquartile_range = calculate_interquartile_range(&numbers);
 
-        let expected_negative_interquartile_range = 2.5;
+        let expected_negative_interquartile_range = 2.0;
 
         assert_eq!(calculated_negative_interquartile_range, expected_negative_interquartile_range);
+    }
+
+    #[test]
+    fn test_interquartile_large_set_calculations(){
+        let numbers = vec![0.23, 1.45, 2.89, 3.56, 4.12, 5.98, 6.71, 7.64, 8.29, 9.01];
+
+        let calculated_interquartile_range = calculate_interquartile_range(&numbers);
+
+        let expected_interquartile_range = 4.35;
+
+        assert_eq!(calculated_interquartile_range, expected_interquartile_range)
     }
     // ---------------------------------------- //
 

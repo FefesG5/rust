@@ -44,7 +44,6 @@ pub fn calculate_population_standard_deviation(numbers: &[f64], mean: f64) -> f6
 }
 
 pub fn calculate_median(numbers: &mut[f64]) ->f64 {
-    //let mut sorted_numbers = numbers.to_vec();
     numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
     let mid = numbers.len() / 2;
@@ -55,25 +54,34 @@ pub fn calculate_median(numbers: &mut[f64]) ->f64 {
     }
 }
 
-pub fn calculate_percentile(numbers: &[f64], percentile:f64) -> f64 {
+pub fn calculate_percentile(numbers: &[f64], percentile: f64) -> f64 {
     let mut sorted_numbers = numbers.to_vec();
     sorted_numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
     let n = sorted_numbers.len();
-    let index = ({percentile/100.0} * (n as f64 - 1.0)) as usize;
-    
+    let real_index = percentile / 100.0 * (n as f64 - 1.0);
+    let index = real_index as usize;
+
     if index >= n - 1 {
         sorted_numbers[n - 1]
+    } else if real_index.fract() == 0.0 {
+        sorted_numbers[index]
     } else {
+        let fraction = real_index - index as f64;
         let lower_value = sorted_numbers[index];
         let upper_value = sorted_numbers[index + 1];
-        lower_value + (percentile / 100.0) * (upper_value - lower_value)
+        lower_value + fraction * (upper_value - lower_value)
     }
 }
+
 
 pub fn calculate_interquartile_range(numbers: &[f64]) -> f64 {
     let q3 = calculate_percentile(numbers, 75.0);
     let q1 = calculate_percentile(numbers, 25.0);
+
+    println!("Q1: {}", q1);
+    println!("Q3: {}", q3);
+
     q3 - q1
 }
 
