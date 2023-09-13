@@ -91,13 +91,22 @@ pub fn calculate_range(numbers: &[f64]) -> f64{
     max_val - min_val
 }
 
-pub fn calculate_variance(numbers: &[f64], mean: f64) -> f64 {
+pub fn calculate_population_variance(numbers: &[f64], mean: f64) -> f64 {
     let mut sum_squared_diff = 0.0;
     for &num in numbers {
         let diff = num - mean;
         sum_squared_diff += diff * diff
     }
     sum_squared_diff / (numbers.len() as f64)
+}
+
+pub fn calculate_sample_variance(numbers: &[f64], mean: f64) -> f64 {
+    let mut sum_squared_diff = 0.0;
+    for &num in numbers {
+        let diff = num - mean;
+        sum_squared_diff += diff * diff
+    }
+    sum_squared_diff / (numbers.len() as f64 - 1.0)
 }
 
 pub fn calculate_coefficient_of_variation(mean:f64, standard_deviation: f64) -> f64 {
