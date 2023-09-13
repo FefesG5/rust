@@ -14,7 +14,7 @@ use calculations::{
     calculate_percentile, 
     calculate_interquartile_range,
     calculate_range, 
-    calculate_variance, 
+    calculate_sample_variance, 
     calculate_coefficient_of_variation,
     calculate_skewness,
     calculate_mode
@@ -38,7 +38,7 @@ async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
     let q3_percentile = calculate_percentile(&numbers.numbers, 75.0); 
     let interquartile_range = calculate_interquartile_range(&numbers.numbers);
     let range = calculate_range(&numbers.numbers);
-    let variance = calculate_variance(&numbers.numbers, mean);
+    let variance = calculate_sample_variance(&numbers.numbers, mean);
     let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
 
     let skewness = match calculate_skewness(&numbers.numbers, mean, standard_deviation) {
