@@ -1,6 +1,7 @@
 mod calculations;
 
 use calculations::{
+    round_to_decimal_places,
     kahan_sum,
     calculate_mean,
     calculate_sample_standard_deviation,
@@ -256,11 +257,11 @@ mod tests {
     fn test_variance_standard_numbers(){
         let numbers = common_numbers();
         let calculated_mean = calculate_mean(&numbers);
-        let epsilon = 1e-3;
+        let epsilon = 1e-10;
 
         let calculated_variance = calculate_sample_variance(&numbers, calculated_mean);
 
-        let expected_variance = 2.601;
+        let expected_variance = 2.602;
 
         assert!(
             (calculated_variance - expected_variance).abs() < epsilon,
@@ -274,11 +275,11 @@ mod tests {
     fn test_variance_negative_numbers(){
         let numbers = common_negative_numbers();
         let calculated_mean = calculate_mean(&numbers);
-        let epsilon = 1e-3;
+        let epsilon = 1e-10;
 
         let calculated_variance = calculate_sample_variance(&numbers, calculated_mean);
 
-        let expected_variance = 2.601;
+        let expected_variance = 2.602;
 
         assert!(
             (calculated_variance - expected_variance).abs() < epsilon,
