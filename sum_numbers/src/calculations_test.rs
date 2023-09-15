@@ -48,7 +48,33 @@ mod tests {
     }
     // ---------------------------------------- //
     
+    // ---------------------------------------- //
+    // Rounding Decimal Tests
+    #[test]
+    fn test_round_to_decimal_places(){
+        let number: f64 = 1.23456789;
 
+        assert_eq!(round_to_decimal_places(number, 0), 1.0);
+        assert_eq!(round_to_decimal_places(number, 1), 1.2);
+        assert_eq!(round_to_decimal_places(number, 2), 1.23);
+        assert_eq!(round_to_decimal_places(number, 3), 1.235);
+        assert_eq!(round_to_decimal_places(number, 4), 1.2346);
+        assert_eq!(round_to_decimal_places(number, 5), 1.23457);
+    }
+    
+    #[test]
+    fn test_round_to_negative_decimal_places(){
+        let number: f64 = -1.23456789;
+
+        assert_eq!(round_to_decimal_places(number, 0), -1.0);
+        assert_eq!(round_to_decimal_places(number, 1), -1.2);
+        assert_eq!(round_to_decimal_places(number, 2), -1.23);
+        assert_eq!(round_to_decimal_places(number, 3), -1.235);
+        assert_eq!(round_to_decimal_places(number, 4), -1.2346);
+        assert_eq!(round_to_decimal_places(number, 5), -1.23457);
+    }
+    // ---------------------------------------- //
+    
     // ---------------------------------------- //
     // Mean Tests
     #[test]
