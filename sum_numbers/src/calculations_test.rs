@@ -10,6 +10,7 @@ use calculations::{
     calculate_interquartile_range,
     calculate_range,
     calculate_sample_variance,
+    calculate_population_variance,
     calculate_coefficient_of_variation,
     calculate_skewness
 };
@@ -278,9 +279,9 @@ mod tests {
     // ---------------------------------------- //
   
     // ---------------------------------------- //
-    // Variance Tests
+    // Sample Variance Tests
     #[test]
-    fn test_variance_standard_numbers(){
+    fn test_sample_variance_standard_numbers(){
         let numbers = common_numbers();
         let calculated_mean = calculate_mean(&numbers);
         let epsilon = 1e-10;
@@ -298,7 +299,7 @@ mod tests {
     }
 
     #[test]
-    fn test_variance_negative_numbers(){
+    fn test_sample_variance_negative_numbers(){
         let numbers = common_negative_numbers();
         let calculated_mean = calculate_mean(&numbers);
         let epsilon = 1e-10;
@@ -315,6 +316,44 @@ mod tests {
         );
     }
     // ---------------------------------------- //
+  
+    // ---------------------------------------- //
+    // Population Variance Tests
+    #[test]
+    fn test_population_variance_standard_numbers(){
+        let numbers = common_numbers();
+        let calculated_mean = calculate_mean(&numbers);
+        let epsilon = 1e-10;
+
+        let calculated_variance = calculate_population_variance(&numbers, calculated_mean);
+
+        let expected_variance = 2.0816;
+
+        assert!(
+            (calculated_variance - expected_variance).abs() < epsilon,
+            "Expected variance: {}, but got: {}",
+            expected_variance,
+            calculated_variance
+        );
+    }
+
+    #[test]
+    fn test_population_variance_negative_standard_numbers(){
+        let numbers = common_negative_numbers();
+        let calculated_mean = calculate_mean(&numbers);
+        let epsilon = 1e-10;
+
+        let calculated_variance = calculate_population_variance(&numbers, calculated_mean);
+
+        let expected_variance = 2.0816;
+
+        assert!(
+            (calculated_variance - expected_variance).abs() < epsilon,
+            "Expected variance: {}, but got: {}",
+            expected_variance,
+            calculated_variance
+        );
+    }
   
     // ---------------------------------------- //
     //  Coefficient of Variation Tests
