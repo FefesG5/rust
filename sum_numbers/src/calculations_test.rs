@@ -5,6 +5,7 @@ use calculations::{
     kahan_sum,
     calculate_mean,
     calculate_sample_standard_deviation,
+    calculate_population_standard_deviation,
     calculate_median,
     calculate_percentile,
     calculate_interquartile_range,
@@ -359,7 +360,7 @@ mod tests {
     //  Coefficient of Variation Tests
 
     #[test]
-    fn test_calculate_sample_coefficient_of_variation() {
+    fn test_calculate_sample_coefficient_of_variation_standard() {
         let numbers = common_numbers();
         let mean = calculate_mean(&numbers);
         let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
@@ -377,39 +378,44 @@ mod tests {
         );
     }
 
-    // #[test]
-    // fn test_coefficient_of_variation_standard(){
-    //     let numbers = common_numbers();
-    //     let mean = calculate_mean(&numbers);
-    //     let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
+    #[test]
+    fn test_calculate_population_coefficient_of_variation_standard() {
+        let numbers = common_numbers();
+        let mean = calculate_mean(&numbers);
+        let standard_deviation = calculate_population_standard_deviation(&numbers, mean);
 
-    //     let calculated_coefficient = calculate_coefficient_of_variation(mean, standard_deviation);
+        let calculated_coefficient = calculate_coefficient_of_variation(mean, standard_deviation);
 
-    //     let expected_coefficient = 47.774010057937566;
-    //     let epsilon = 1e-10;
+        let expected_coefficient = 47.7740100579;
+        let epsilon = 1e-10;
 
-    //     assert!(
-    //         (calculated_coefficient - expected_coefficient).abs() < epsilon,
-    //         "Calculated coefficient did not match expected value within tolerance: calculated = {}, expected = {}",
-    //         calculated_coefficient,
-    //         expected_coefficient
-    //     );
-    // }
+        assert!(
+            (calculated_coefficient- expected_coefficient).abs() < epsilon,
+            "Calculated coefficient did not match expected value within tolerance: calculated = {}, expected = {}",
+            calculated_coefficient,
+            expected_coefficient
+        );
+    }
     // ---------------------------------------- //
   
     // ---------------------------------------- //
     //  Skewness Tests
     #[test]
-    fn test_skewness_standard(){
+    fn test_sample_skewness_standard(){
         let numbers = common_numbers();
         let mean = calculate_mean(&numbers);
-        let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
+        let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);  
 
-        let skewness = calculate_skewness(&numbers, mean, 1.6125);
+        let skewness = calculate_skewness(&numbers, mean, standard_deviation);
 
         let expected_skewness = Some(0.063184795);
-        let epsilon = 1e-4;
+        let epsilon = 1e-10;
 
-        assert!(matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon))
+        assert!(
+            matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon),
+            "Sample skewness did not match expected value; got {:?}, expected {:?}",
+            skewness,
+            expected_skewness
+        );
     }
 }
