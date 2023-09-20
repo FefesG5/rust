@@ -13,7 +13,8 @@ use calculations::{
     calculate_sample_variance,
     calculate_population_variance,
     calculate_coefficient_of_variation,
-    calculate_skewness
+    calculate_sample_skewness,
+    calculate_population_skewness
 };
 
 #[cfg(test)]
@@ -406,9 +407,28 @@ mod tests {
         let mean = calculate_mean(&numbers);
         let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);  
 
-        let skewness = calculate_skewness(&numbers, mean, standard_deviation);
+        let skewness = calculate_sample_skewness(&numbers, mean, standard_deviation);
 
-        let expected_skewness = Some(0.063184795);
+        let expected_skewness = Some(0.1751028405);
+        let epsilon = 1e-10;
+
+        assert!(
+            matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon),
+            "Sample skewness did not match expected value; got {:?}, expected {:?}",
+            skewness,
+            expected_skewness
+        );
+    }
+
+    #[test]
+    fn test_population_skewness_standard(){
+        let numbers = common_numbers();
+        let mean = calculate_mean(&numbers);
+        let standard_deviation = calculate_population_standard_deviation(&numbers, mean);  
+
+        let skewness = calculate_population_skewness(&numbers, mean, standard_deviation);
+
+        let expected_skewness = Some(0.086);
         let epsilon = 1e-10;
 
         assert!(

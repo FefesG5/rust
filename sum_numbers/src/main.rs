@@ -16,8 +16,7 @@ use calculations::{
     calculate_range, 
     calculate_sample_variance, 
     calculate_coefficient_of_variation,
-    calculate_skewness,
-    calculate_mode
+    calculate_sample_skewness,
 };
 
 #[derive(Deserialize)]
@@ -41,12 +40,11 @@ async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
     let variance = calculate_sample_variance(&numbers.numbers, mean);
     let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
 
-    let skewness = match calculate_skewness(&numbers.numbers, mean, standard_deviation) {
+    let skewness = match calculate_sample_skewness(&numbers.numbers, mean, standard_deviation) {
         Some(value) => round_to_decimal_places(value, 9),
         None => f64::NAN,
     };
 
-    let mode = calculate_mode(&numbers.numbers);
 
     println!("Received numbers: {:?}", numbers.numbers);
     println!("Basic Calculations");
@@ -65,7 +63,7 @@ async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
         "variance": round_to_decimal_places(variance, 9),
         "coefficient_of_variation": round_to_decimal_places(coefficient_of_variation, 9),
         "skewness": skewness,
-        "mode": mode
+    
     });
 
     HttpResponse::Ok().json(response_data)
