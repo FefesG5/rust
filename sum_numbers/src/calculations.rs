@@ -125,7 +125,17 @@ pub fn calculate_sample_skewness(numbers: &[f64], mean:f64, standard_deviation: 
         sum_cubed_diff += diff.powi(3);
     }
 
-    let skewness = (n * ((n - 1.0).sqrt()) / ((n - 2.0).sqrt())) * sum_cubed_diff / (n * standard_deviation.powi(3));  
+    let skewness = (sum_cubed_diff / n) / standard_deviation.powi(3);
+    let adjusted_skewness = ((n * (n - 1.0)).sqrt() / (n - 2.0)) * skewness;
+
+    // Debug print statements
+    println!("n: {}", n);
+    println!("mean: {}", mean);
+    println!("standard deviation: {}", standard_deviation);
+    println!("sum_cubed_diff: {}", sum_cubed_diff);
+    println!("skewness: {}", skewness);
+    println!("adjusted skewness: {}", adjusted_skewness);
+
     Some(skewness)
 }
 

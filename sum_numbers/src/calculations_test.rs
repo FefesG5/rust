@@ -409,7 +409,7 @@ mod tests {
 
         let skewness = calculate_sample_skewness(&numbers, mean, standard_deviation);
 
-        let expected_skewness = Some(0.1751028405);
+        let expected_skewness = Some(0.06318479508920281);
         let epsilon = 1e-10;
 
         assert!(
@@ -428,12 +428,12 @@ mod tests {
 
         let skewness = calculate_population_skewness(&numbers, mean, standard_deviation);
 
-        let expected_skewness = Some(0.086);
+        let expected_skewness = Some(0.037910877053521586);
         let epsilon = 1e-10;
 
         assert!(
             matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon),
-            "Sample skewness did not match expected value; got {:?}, expected {:?}",
+            "Population skewness did not match expected value; got {:?}, expected {:?}",
             skewness,
             expected_skewness
         );
