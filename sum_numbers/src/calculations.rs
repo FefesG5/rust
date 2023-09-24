@@ -24,11 +24,10 @@ pub fn calculate_mean(numbers: &[f64]) -> f64 {
 }
 
 pub fn calculate_sample_standard_deviation(numbers: &[f64], mean: f64) -> f64 {
-    let mut sum_squared_diff = 0.0;
-    for &num in numbers {
+    let sum_squared_diff: f64 = numbers.iter().map(|&num| {
         let diff = num - mean;
-        sum_squared_diff += diff * diff;
-    }
+        diff * diff
+    }).sum();
     let mean_squared_diff = sum_squared_diff / ((numbers.len() - 1) as f64);
     mean_squared_diff.sqrt()
 }
@@ -113,31 +112,22 @@ pub fn calculate_coefficient_of_variation(mean:f64, standard_deviation: f64) -> 
     (standard_deviation / mean ) * 100.0
 }
 
-pub fn calculate_sample_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> Option<f64> {
+pub fn calculate_sample_skewness(numbers: &[f64], mean: f64, standard_deviation: f64) -> Option<f64> {
     let n = numbers.len() as f64;
     if n < 3.0 || standard_deviation == 0.0 {
         return None;
     }
 
-    let mut sum_cubed_diff = 0.0;
-    for &num in numbers {
+    let sum_cubed_diff: f64 = numbers.iter().map(|&num| {
         let diff = num - mean;
-        sum_cubed_diff += diff.powi(3);
-    }
+        diff.powi(3)
+    }).sum();
 
-    let skewness = (sum_cubed_diff / n) / standard_deviation.powi(3);
-    let adjusted_skewness = ((n * (n - 1.0)).sqrt() / (n - 2.0)) * skewness;
+    let adjusted_skewness = (n * (n - 1.0).sqrt() / (n - 2.0)) * (sum_cubed_diff / standard_deviation.powi(3));
 
-    // Debug print statements
-    println!("n: {}", n);
-    println!("mean: {}", mean);
-    println!("standard deviation: {}", standard_deviation);
-    println!("sum_cubed_diff: {}", sum_cubed_diff);
-    println!("skewness: {}", skewness);
-    println!("adjusted skewness: {}", adjusted_skewness);
-
-    Some(skewness)
+    Some(adjusted_skewness)
 }
+
 
 pub fn calculate_population_skewness(numbers: &[f64], mean:f64, standard_deviation: f64) -> Option<f64> {
     let n = numbers.len() as f64;
@@ -154,29 +144,3 @@ pub fn calculate_population_skewness(numbers: &[f64], mean:f64, standard_deviati
     let skewness = sum_cubed_diff / (n * standard_deviation.powi(3));  // Corrected the formula here
     Some(skewness)
 }
-
-// pub fn calculate_mode(numbers: &[f64]) -> Vec<(f64, usize)> {
-    
-//     let mut frequency_map: HashMap<String, usize> = HashMap::new();
-
-//     for &num in numbers {
-//         let num_str = num.to_string();
-//         *frequency_map.entry(num_str).or_insert(0) += 1;
-//     }
-
-//     let mut max_frequency = 0;
-//     let mut modes = Vec::new();
-
-//     for (value_str, &frequency) in &frequency_map {
-//         let num = value_str.parse::<f64>().unwrap();
-//         if frequency > max_frequency {
-//             max_frequency = frequency;
-//             modes.clear();
-//             modes.push((num, frequency));
-//         } else if frequency == max_frequency {
-//             modes.push((num, frequency));
-//         }
-//     }
-
-//     modes
-// }

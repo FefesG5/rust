@@ -421,29 +421,22 @@ mod tests {
         );
     }
 
-    
-}
+    #[test]
+    fn test_sample_skewness_standard() {
+        let numbers = common_numbers();
+        let mean = calculate_mean(&numbers);
+        let standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
 
-// WORKS AND MATCH THE PYTHON CODE TEST
-// #[test] 
-// fn test_sample_population_skewness_standard() {
-//     let numbers = common_numbers;
-    
-//     let n = numbers.len() as f64;
-    
-//     let mean = numbers.iter().cloned().sum::<f64>() / n;
-//     let variance = numbers.iter().map(|&x| (x - mean).powi(2)).sum::<f64>() / (n - 1.0);
-//     let std_dev = variance.sqrt();
-    
-//     let skewness = (n * (n - 1.0).sqrt()) / (n - 2.0)
-//         * numbers.iter().map(|&x| (x - mean).powi(3)).sum::<f64>() / std_dev.powi(3);
-    
-//     println!("Mean: {}", mean);
-//     println!("Standard Deviation: {}", std_dev);
-//     println!("Skewness: {}", skewness);
-    
-//     assert_eq!(mean, 3.02);
-//     assert!((std_dev - 1.6130716041143367).abs() < 1e-8);
-//     // Update the skewness value obtained from Python
-//     assert!((skewness - 0.5054783607136213).abs() < 1e-8);
-// }
+        let skewness = calculate_sample_skewness(&numbers, mean, standard_deviation);
+
+        let expected_skewness = Some(0.5054783607136213); // Replace with the actual expected value
+        let epsilon = 1e-10;
+
+        assert!(
+            matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon),
+            "Sample skewness did not match expected value; got {:?}, expected {:?}",
+            skewness,
+            expected_skewness
+        );
+    }
+}
