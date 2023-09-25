@@ -78,9 +78,6 @@ pub fn calculate_interquartile_range(numbers: &[f64]) -> f64 {
     let q3 = calculate_percentile(numbers, 75.0);
     let q1 = calculate_percentile(numbers, 25.0);
 
-    println!("Q1: {}", q1);
-    println!("Q3: {}", q3);
-
     q3 - q1
 }
 
@@ -141,6 +138,6 @@ pub fn calculate_population_skewness(numbers: &[f64], mean:f64, standard_deviati
         sum_cubed_diff += diff.powi(3);
     }
 
-    let skewness = sum_cubed_diff / (n * standard_deviation.powi(3));  // Corrected the formula here
+    let skewness = sum_cubed_diff / (n * standard_deviation.powi(3));
     Some(skewness)
 }
