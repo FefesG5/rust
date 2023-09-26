@@ -119,7 +119,12 @@ mod tests {
        
         let calculated_standard_deviation = calculate_sample_standard_deviation(&numbers, mean);
 
-        assert!((calculated_standard_deviation - calculate_expected_sample_standard_deviation()).abs() < epsilon);
+        let expected_standard_deviation = calculate_expected_sample_standard_deviation();
+
+        assert!((calculated_standard_deviation - expected_standard_deviation).abs() < epsilon, 
+        "Calculated sample std standard: {}, but expected: {}",
+        calculated_standard_deviation,
+        expected_standard_deviation);
     }
 
     fn calculate_expected_sample_standard_deviation() -> f64 {
@@ -148,7 +153,13 @@ mod tests {
        
         let calculated_standard_deviation = calculate_sample_standard_deviation(&negative_numbers, mean);
 
-       assert!((calculated_standard_deviation - calculate_expected_standard_deviation_negative_numbers()).abs() < epsilon);
+        let expected_standard_deviation = calculate_expected_standard_deviation_negative_numbers();
+
+       assert!((calculated_standard_deviation - calculate_expected_standard_deviation_negative_numbers()).abs() < epsilon,
+       "Calculated sample std for negative numbers: {}, but expected: {}",
+       calculated_standard_deviation,
+       expected_standard_deviation
+        );
     }
 
     fn calculate_expected_standard_deviation_negative_numbers() ->f64{
@@ -294,9 +305,9 @@ mod tests {
 
         assert!(
             (calculated_variance - expected_variance).abs() < epsilon,
-            "Expected variance: {}, but got: {}",
+            "Calculated variance: {}, but expected: {}",
+            calculated_variance,
             expected_variance,
-            calculated_variance
         );
     }
 
@@ -312,9 +323,9 @@ mod tests {
 
         assert!(
             (calculated_variance - expected_variance).abs() < epsilon,
-            "Expected variance: {}, but got: {}",
+            "Calculated variance: {}, but expected: {}",
+            calculated_variance,
             expected_variance,
-            calculated_variance
         );
     }
     // ---------------------------------------- //
@@ -333,9 +344,9 @@ mod tests {
 
         assert!(
             (calculated_variance - expected_variance).abs() < epsilon,
-            "Expected variance: {}, but got: {}",
+            "Calculated variance: {}, but expected: {}",
+            calculated_variance,
             expected_variance,
-            calculated_variance
         );
     }
 
@@ -351,9 +362,9 @@ mod tests {
 
         assert!(
             (calculated_variance - expected_variance).abs() < epsilon,
-            "Expected variance: {}, but got: {}",
+            "Calculated variance: {}, but expected: {}",
+            calculated_variance,
             expected_variance,
-            calculated_variance
         );
     }
   
@@ -415,7 +426,7 @@ mod tests {
 
         assert!(
             matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon),
-            "Population skewness did not match expected value; got {:?}, expected {:?}",
+            "Population skewness did not match expected value;  calculated skewness {:?}, expected {:?}",
             skewness,
             expected_skewness
         );
@@ -429,12 +440,13 @@ mod tests {
 
         let skewness = calculate_sample_skewness(&numbers, mean, standard_deviation);
 
-        let expected_skewness = Some(0.5054783607136213); // Replace with the actual expected value
+        let expected_skewness = Some(0.5054783607136213);
+
         let epsilon = 1e-10;
 
         assert!(
             matches!(skewness, Some(x) if (x - expected_skewness.unwrap()).abs() < epsilon),
-            "Sample skewness did not match expected value; got {:?}, expected {:?}",
+            "Sample skewness did not match expected value; calculated skewness {:?}, expected {:?}",
             skewness,
             expected_skewness
         );
