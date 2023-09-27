@@ -10,18 +10,22 @@ use calculations::{
     round_to_decimal_places,
     calculate_mean, 
     calculate_sample_standard_deviation,
+    calculate_population_standard_deviation,
     calculate_median, 
     calculate_percentile, 
     calculate_interquartile_range,
     calculate_range, 
-    calculate_sample_variance, 
+    calculate_sample_variance,
+    calculate_population_variance,
     calculate_coefficient_of_variation,
     calculate_sample_skewness,
+    calculate_population_skewness
 };
 
 #[derive(Deserialize)]
 struct Numbers {
     numbers: Vec<f64>,
+    is_population: bool,
 }
 
 #[get("/")]
@@ -31,20 +35,31 @@ async fn check_server_status() -> impl Responder {
 
 async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
     let mean = calculate_mean(&numbers.numbers);
-    let standard_deviation = calculate_sample_standard_deviation(&numbers.numbers, mean);
+
+    let (standard_deviation, variance, skewness) = if numbers.is_population {
+        let standard_deviation = calculate_population_standard_deviation(&numbers.numbers, mean);
+        let variance = calculate_population_variance(&numbers.numbers, mean);
+        let skewness = match calculate_population_skewness(&numbers.numbers, mean, standard_deviation){
+            Some(value) => round_to_decimal_places(value, 9),
+            None => f64::NAN,
+        };
+        (standard_deviation, variance, skewness)
+    } else{
+        let standard_deviation = calculate_sample_standard_deviation(&numbers.numbers, mean);
+        let variance = calculate_sample_variance(&numbers.numbers, mean);
+        let skewness = match calculate_sample_skewness(&numbers.numbers, mean, standard_deviation){
+            Some(value) => round_to_decimal_places(value, 9),
+            None => f64::NAN,
+        };
+        (standard_deviation, variance, skewness)
+    };
+
     let median = calculate_median(&mut numbers.numbers[..]);
     let q1_percentile = calculate_percentile(&numbers.numbers, 25.0);
     let q3_percentile = calculate_percentile(&numbers.numbers, 75.0); 
     let interquartile_range = calculate_interquartile_range(&numbers.numbers);
     let range = calculate_range(&numbers.numbers);
-    let variance = calculate_sample_variance(&numbers.numbers, mean);
     let coefficient_of_variation = calculate_coefficient_of_variation(mean, standard_deviation);
-
-    let skewness = match calculate_sample_skewness(&numbers.numbers, mean, standard_deviation) {
-        Some(value) => round_to_decimal_places(value, 9),
-        None => f64::NAN,
-    };
-
 
     println!("Received numbers: {:?}", numbers.numbers);
     println!("Basic Calculations");
