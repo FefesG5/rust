@@ -1,7 +1,5 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
+use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 
-
-#[allow(unused_imports)]
 use serde::Deserialize;
 
 mod calculations;

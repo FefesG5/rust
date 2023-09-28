@@ -1,6 +1,3 @@
-use serde::Deserialize;
-use std::collections::HashMap;
-
 pub fn kahan_sum(numbers: &[f64]) -> f64 {
     let mut sum = 0.0;
     let mut c = 0.0;
