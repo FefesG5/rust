@@ -3,7 +3,7 @@ name: Rust Test
 on:
   push:
     branches:
-      - Web-Experimental # Run this workflow on push to Web-Experimental branch
+      - Web-Experimental
   pull_request:
     branches:
       - Web-Experimental
