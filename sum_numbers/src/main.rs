@@ -1,5 +1,7 @@
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 
+use actix_files::Files;
+
 use serde::Deserialize;
 
 mod calculations;
@@ -87,8 +89,9 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .service(check_server_status)
-            .service(web::resource("/numbers").route(web::post().to(return_calculations)))
+        .service(web::resource("/numbers").route(web::post().to(return_calculations)))
+        .service(Files::new("/", "./static").index_file("index.html"))
+        .service(check_server_status)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
