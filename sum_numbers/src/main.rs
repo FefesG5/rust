@@ -87,13 +87,18 @@ async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
+    let bind_address = match std::env::var("BIND_ADDRESS") {
+        Ok(val) => val,
+        Err(_) => "127.0.0.1".to_string(), // default to local if not specified
+    };
+
     HttpServer::new(|| {
         App::new()
         .service(web::resource("/numbers").route(web::post().to(return_calculations)))
         .service(Files::new("/", "./static").index_file("index.html"))
         .service(check_server_status)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind((bind_address.as_str(), 8080))?
     .run()
     .await
 }
