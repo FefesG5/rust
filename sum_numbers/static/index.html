@@ -2,12 +2,82 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Static Page</title>
+    <title>Instructions for Kinjo Boys</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        line-height: 1.6;
+      }
+
+      code {
+        background-color: #f4f4f4;
+        padding: 2px 5px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+      }
+    </style>
   </head>
+
   <body>
-    <h1>Welcome to My Static Page!</h1>
-    <p>This is a simple static HTML page served by Actix Web.</p>
+    <h1>Welcome Kinjo Boys</h1>
+
+    <p>I would like to have the Statistical Calculator tested:</p>
+
+    <ol>
+      <li>
+        Open Postman. If you haven't installed it yet, you can download it from
+        the
+        <a href="https://www.postman.com/downloads/" target="_blank"
+          >official website</a
+        >.
+      </li>
+      <li>
+        In Postman, create a new request tab and set the method to
+        <code>POST</code>.
+      </li>
+      <li>
+        Enter the following URL in the address bar (replace
+        "SECRET_IP_GIVEN_TO_YOU" with the IP address provided to you):
+        <code>http://YOUR_SECRET_IP:8080/numbers</code>
+      </li>
+      <li>Below the URL bar, go to the <code>Body</code> tab.</li>
+      <li>
+        Select the <code>raw</code> option and from the dropdown on the right,
+        choose <code>JSON</code>.
+      </li>
+      <li>
+        In the text area that appears, you can input one of the following JSON
+        structures:
+      </li>
+
+      <h3>Example 1:</h3>
+      <pre>
+<code>
+{
+    "numbers": [1, 2, 3, 4, 5],
+    "is_population": false
+}
+</code>
+</pre>
+
+      <h3>Example 2:</h3>
+      <pre>
+<code>
+{
+    "numbers": [-5, 10.3,15.289, 20.161, -225.88, 30.42],
+    "is_population": true
+}
+</code>
+</pre>
+      <li>Click on the <code>Send</code> button to send the request.</li>
+      <li>
+        You should receive a basic statistical calculations of the numbers you
+        have sent.
+      </li>
+    </ol>
+
+    <p>Thanks</p>
   </body>
 </html>
