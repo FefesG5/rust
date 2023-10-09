@@ -50,20 +50,33 @@ button.copy:hover {
   background-color: #45a049;
 }
 
+.postman-icon {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 50px;
+  height: auto;
+}
+
+.postman-sample-img-1 {
+  max-width: 70%;
+  height: auto;
+  margin: 0 auto;
+}
+
 @media only screen and (max-width: 768px) {
-  /* Adjust code block width for mobile */
   code {
     max-width: 100%;
     font-size: 0.9em;
   }
 
-  /* Adjust pre block styling for better readability on mobile */
   pre {
     overflow-x: auto;
     white-space: pre-wrap;
     word-wrap: break-word;
   }
 
-  /* Additional adjustments if needed */
-  /* ... */
+  .postman-sample-img-1 {
+    max-width: 100%;
+  }
 }

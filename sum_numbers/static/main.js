@@ -1,12 +1,21 @@
-function copyToClipboard(elementId) {
-  let textArea = document.createElement("textarea");
-  textArea.value = document.getElementById(elementId).textContent.trim();
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textArea);
+function writeToClipboard(text) {
+  return navigator.clipboard.writeText(text);
+}
 
-  let copiedMessage = document.getElementById(elementId + "-message");
+function copyToClipboard(elementId) {
+  let textContent = document.querySelector(`#${elementId}`).textContent.trim();
+
+  writeToClipboard(textContent)
+    .then(function () {
+      displayCopiedMessage(elementId);
+    })
+    .catch(function (error) {
+      console.error("Could not copy text:", error);
+    });
+}
+
+function displayCopiedMessage(elementId) {
+  let copiedMessage = document.querySelector(`#${elementId}` + `-message`);
   copiedMessage.style.display = "inline";
   setTimeout(function () {
     copiedMessage.style.display = "none";
