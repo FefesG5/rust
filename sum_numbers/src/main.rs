@@ -5,6 +5,8 @@ use actix_files::Files;
 use serde::Deserialize;
 
 mod calculations;
+mod integration_tests;
+
 
 use calculations::{
     round_to_decimal_places,
