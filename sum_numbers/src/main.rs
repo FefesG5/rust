@@ -5,6 +5,7 @@ use actix_files::Files;
 use serde::Deserialize;
 
 mod calculations;
+#[cfg(test)]
 mod integration_tests;
 
 
