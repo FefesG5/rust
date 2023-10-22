@@ -37,6 +37,11 @@ async fn check_server_status() -> impl Responder {
 }
 
 async fn return_calculations(mut numbers: web::Json<Numbers>) -> HttpResponse {
+
+    if numbers.numbers.is_empty(){
+        return HttpResponse::BadRequest().json("Numbers cannot be empty");
+    }
+
     let mean = calculate_mean(&numbers.numbers);
 
     let (standard_deviation, variance, skewness) = if numbers.is_population {
