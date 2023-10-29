@@ -1,4 +1,5 @@
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::web::JsonConfig;
 
 use actix_files::Files;
 
@@ -98,6 +99,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+        .app_data(JsonConfig::default().limit(10000))
         .service(web::resource("/numbers").route(web::post().to(return_calculations)))
         .service(Files::new("/", "./static").index_file("index.html"))
         .service(check_server_status)
